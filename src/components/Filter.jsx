@@ -2,8 +2,7 @@ import { useState } from "react";
 
 function ToDoList() {
   const [list, setList] = useState([]);
-  const [inputText, setInputText] = useState("");
-  const [query, setQuery] = useState(""); // ✅ 검색어 상태
+  const [inputText, setInputText] = useState(""); // 검색과 추가를 모두 담당
 
   const handleChange = (e) => setInputText(e.target.value);
 
@@ -11,10 +10,12 @@ function ToDoList() {
     const text = inputText.trim();
     if (!text) return;
     setList((prev) => [...prev, { text, completed: false }]);
-    setInputText("");
+    setInputText(""); 
   };
 
-  const handleClick = handleSubmit;
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSubmit();
+  };
 
   const handleDelete = (index) => {
     setList((prev) => prev.filter((_, i) => i !== index));
@@ -28,34 +29,29 @@ function ToDoList() {
     );
   };
 
-  // ✅ Filter.jsx 와 동일한 로직(대소문자 무시 포함)
+  
   const matchesQuery = (text) => {
-    const q = query.trim().toLowerCase();
+    const q = inputText.trim().toLowerCase();
     return q ? text.toLowerCase().includes(q) : true;
   };
 
   return (
     <div>
-      {/* 입력 + 추가 */}
+      {}
       <div>
-        <input type="text" value={inputText} onChange={handleChange} />
-        <button onClick={handleClick}>추가</button>
-      </div>
-
-      {/* ✅ 검색 입력창 */}
-      <div style={{ marginTop: 8 }}>
         <input
-          placeholder="검색어 입력"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          type="text"
+          value={inputText}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          placeholder="입력/검색"
         />
+        <button onClick={handleSubmit}>추가</button>
       </div>
 
-      {/* 목록 */}
-      <div>
+      <div style={{ marginTop: 8 }}>
         <ul>
           {list.map((item, index) => {
-            // ✅ 원본 인덱스를 유지하기 위해 map에서 조건부 렌더링
             if (!matchesQuery(item.text)) return null;
 
             return (
