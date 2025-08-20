@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function ToDoList() {
   const [list, setList] = useState([]);
-  const [inputText, setInputText] = useState(""); // 검색과 추가를 모두 담당
+  const [inputText, setInputText] = useState("");
 
   const handleChange = (e) => setInputText(e.target.value);
 
